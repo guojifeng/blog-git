@@ -38,4 +38,9 @@ public class UserServiceImpl implements IUserService {
     public void deleteUserById(int userId) {
         userMapper.deleteByPrimaryKey(userId);
     }
+
+    @Override
+    public User checkUsernameAndPassword(String username, String password) {
+        return userMapper.selectUserByUsernameAndPassword(username,password);
+    }
 }
