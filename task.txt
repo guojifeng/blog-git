@@ -1,0 +1,4 @@
+redis集成 完成
+mybatis集成 完成
+mvc集成 完成
+mq集成 未完成
