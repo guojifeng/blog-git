@@ -34,16 +34,13 @@ public class UserController {
     @PassToken
     public Result login(@RequestBody User user){
         User users = userService.checkUsernameAndPassword(user.getUsername(), user.getPassword());
-        Result result = new Result();
+//        Result result = new Result();
         if (users==null){
-            result.setMessage("error");
-            return result;
+            return Result.createWithSuccessMessage("error");
         }
-        result.setMessage("success");
         String token = JwtUtil.getToken(users);
-        result.setData(token);
 //      redisTemplate.opsForValue().set("zz","guojifeng");
-        return result;
+        return Result.createWithModel("success",token);
     }
 
 

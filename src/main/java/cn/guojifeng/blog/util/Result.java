@@ -1,108 +1,95 @@
 package cn.guojifeng.blog.util;
 
-import java.io.Serializable;
+import com.github.pagehelper.PageInfo;
+import lombok.Data;
+import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Web接口统一返回结果
- * @author
- * @since
+ * 用于向前端返回统一的结果对象
+ * @param <T>
  */
-public class Result implements Serializable {
+@Data
+@Accessors(chain = true)
+public class Result<T> {
 
-    /**  */
-    private static final long serialVersionUID = 1L;
+    private int success = 0; // 操作标识，标记
+    private String resultCode; // 结果编码
+    private String message; // 提示信息
+    private T model; // 结果对象
+    private List<T> models; // 结果集对象
+    private PageInfo pageInfo; // 分页信息对象
+    private Object extra; // 扩展字段
 
-    /** 状态码 */
-    private String code;
-    /** 状态描述 */
-    private String message;
-    /** 业务数据 */
-    private Object data;
-
-    /**用户自定义返回错误CODE*/
-    public static String ERROR_CODE = "-1";
-
-    public static String SUCCESS_CODE = "200";
-    private String SUCCESS_MSG = "操作成功";
-    /** 构造方法 */
-    public Result() {
-        super();
-        this.code = SUCCESS_CODE;
-        this.message = SUCCESS_MSG;
+    // 禁止空参构造
+    private Result() {
     }
 
-    public Result(Object data) {
-        super();
-        this.code = SUCCESS_CODE;
-        this.message = SUCCESS_MSG;
-        this.data = data;
+    // 通过操作标识及提示信息构建结果对象
+    private static <T> Result<T> createWithSuccessFlag(int success) {
+        Result result = new Result();
+        result.setSuccess(success);
+        return result;
     }
 
-    /**
-     * 构造方法
-     * @param code		状态码
-     * @param message	状态描述
-     */
-    public Result(String code, String message) {
-        super();
-        this.code = code;
-        this.message = message;
+    public static <T> Result<T> createWithSuccessMessage() {
+        Result result = createWithSuccessFlag(Constants.YES);
+        result.setResultCode(ErrorConstants.OPERATION_SUCCESS);
+        result.setMessage("操作成功！");
+        return result;
     }
 
-
-    public Result(String code, String message,String data) {
-        super();
-        this.code = code;
-        this.message = message;
-        this.data=data;
+    public static <T> Result<T> createWithSuccessMessage(String message) {
+        Result result = createWithSuccessFlag(Constants.YES);
+        result.setResultCode(ErrorConstants.OPERATION_SUCCESS);
+        result.setMessage(StringUtils.isBlank(message) ? "操作成功！" : message);
+        return result;
     }
 
-    /**
-     * 构造方法
-     * @param code		状态码
-     * @param message	状态描述
-     * @param data		业务数据
-     */
-    public Result(String code, String message, Object data) {
-        super();
-        this.code = code;
-        this.message = message;
-        this.data = data;
+    public static <T> Result<T> createWithModel(T model) {
+        Result result = createWithSuccessMessage();
+        result.setModel(model);
+        return result;
     }
 
-
-    /** 状态码 */
-    public String getCode() {
-        return code;
+    public static <T> Result<T> createWithModel(String message, T model) {
+        Result result = createWithSuccessMessage(message);
+        result.setModel(model);
+        return result;
     }
 
-    /** 状态码 */
-    public void setCode(String code) {
-        this.code = code;
+    public static <T> Result<T> createWithModels(String message, List<T> models) {
+        Result result = createWithSuccessMessage(message);
+        result.setModels(models == null ? new ArrayList<>(0) : models);
+        return result;
     }
 
-    /** 状态描述 */
-    public String getMessage() {
-        return message;
+    public static <T> Result<T> createWithModels(List<T> models) {
+        Result result = createWithSuccessMessage();
+        result.setModels(models == null ? new ArrayList<>(0) : models);
+        return result;
     }
 
-    /** 状态描述 */
-    public void setMessage(String message) {
-        this.message = message;
+    public static <T> Result<T> createWithPaging(String message, List<T> models, PageInfo pagingInfo) {
+        Result result = createWithModels(message, models == null ? new ArrayList<>(0) : models);
+        result.setPageInfo(pagingInfo);
+        return result;
     }
 
-    /** 业务数据 */
-    public Object getData() {
-        return data;
+    public static <T> Result<T> createWithPaging(List<T> models, PageInfo pagingInfo) {
+        Result result = createWithModels(models == null ? new ArrayList<>(0) : models);
+        result.setPageInfo(pagingInfo);
+        return result;
     }
 
-    /** 业务数据 */
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    public boolean isSuccess(){
-        return SUCCESS_CODE.equals(code);
+    public static <T> Result<T> createWithErrorMessage(String message, String errorCode) {
+        Result result = createWithSuccessFlag(Constants.NO);
+        result.setMessage(StringUtils.isBlank(message) ? "操作失败！" : message);
+        result.setResultCode(StringUtils.isBlank(errorCode) ? ErrorConstants.OPERATION_FAIL : errorCode);
+        return result;
     }
 
 }
