@@ -41,6 +41,7 @@ public class UserController {
         String token = JwtUtil.getToken(users);
 //      redisTemplate.opsForValue().set("zz","guojifeng");
         return Result.createWithModel("success",token);
+
     }
 
 

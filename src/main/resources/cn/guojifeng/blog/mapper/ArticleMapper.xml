@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.guojifeng.blog.mapper.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="cn.guojifeng.blog.domain.Article" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="pageview" property="pageview" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.guojifeng.blog.domain.Article" useGeneratedKeys="true" keyProperty="id" >
+    insert into b_article (title, content, pageview, 
+      createtime, author,comment_num)
+    values (#{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{pageview,jdbcType=INTEGER}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{author,jdbcType=VARCHAR},#{commentNum})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.guojifeng.blog.domain.Article" >
+    update b_article
+    set title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      pageview = #{pageview,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      author = #{author,jdbcType=VARCHAR},
+      #{commentNum}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, title, content, pageview, createtime, author,comment_num
+    from b_article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, title, content, pageview, createtime, author,comment_num
+    from b_article
+  </select>
+</mapper>
