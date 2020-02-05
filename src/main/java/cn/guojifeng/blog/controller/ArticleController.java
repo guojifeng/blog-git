@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+/**
+ * @Author 郭继峰
+ * @Description  文章模块
+ * @Date 2020/1/6 12:39
+ **/
 @Controller
 @CrossOrigin
 @RequestMapping("/article")

@@ -6,7 +6,9 @@ import cn.guojifeng.blog.util.JwtUtil;
 import cn.guojifeng.blog.util.PassToken;
 import cn.guojifeng.blog.util.Result;
 import cn.guojifeng.blog.util.UserLoginToken;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -18,9 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * @Author 郭继峰
+ * @Description  用户模块
+ * @Date 2020/1/6 12:39
+ **/
 @Controller
 @RequestMapping("/user")
 @CrossOrigin
+@Api("用户模块")
 public class UserController {
 
     @Autowired
@@ -28,6 +36,8 @@ public class UserController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    private Logger logger = Logger.getLogger(UserController.class);
 
     @ResponseBody
     @RequestMapping(value="/login")
@@ -47,9 +57,14 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value="/test2")
-    @UserLoginToken
+    @PassToken
     public String test2(){
         List<User> users = userService.selectAll();
+        logger.debug("------------debug------------------");
+        logger.info("------------info------------------");
+        logger.warn("------------warn------------------");
+        logger.error("------------error------------------");
+        logger.fatal("------------fatal------------------");
 //        String token = JwtUtil.getToken(users.get(0));
 //        String zz = (String) redisTemplate.opsForValue().get("zz");
 //        System.out.println(zz);
